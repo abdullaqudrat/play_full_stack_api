@@ -46,7 +46,7 @@ app.post('/api/v1/songs', (request, response) => {
     }
   }
 
-  database('favorites').insert(song, '*')
+  database('favorites').insert(song, ['id', 'song_title', 'artist_name', 'song_rating'])
     .then(song => {
       response.status(201).json({ id: song[0], song_title: song[1], artist_name: song[2], genre: song[3], song_rating: song[4]})
     })
