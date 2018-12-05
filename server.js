@@ -107,3 +107,15 @@ app.delete('/api/v1/songs/:id', (request, response) => {
       response.status(404).json({ error });
     });
 });
+
+// GET ALL PLAYLISTS
+
+app.get('/api/v1/playlists', (request, response) => {
+  database('playlists').select()
+    .then((playlists) => {
+      response.status(200).json(playlists)
+    })
+    .catch((error) => {
+      response.status(500).json({ error })
+    })
+})
