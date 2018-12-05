@@ -19,7 +19,7 @@ exports.up = function(knex, Promise) {
 
       knex.schema.createTable('playlists_favorites', function(table) {
         table.increments('id').primary();
-        table.integer('song_id').references('songs.id');
+        table.integer('favorite_id').references('favorites.id');
         table.integer('playlist_id').references('playlists.id');
   
         table.timestamps(true, true);
@@ -31,7 +31,7 @@ exports.up = function(knex, Promise) {
   exports.down = function(knex, Promise) {
     return Promise.all([
       knex.schema.dropTable('playlists'),
-      knex.schema.dropTable('favorites')
+      knex.schema.dropTable('favorites'),
       knex.schema.dropTable('playlists_favorites')
     ]);
   }
