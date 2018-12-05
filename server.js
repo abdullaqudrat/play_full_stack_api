@@ -94,3 +94,16 @@ app.patch('/api/v1/songs/:id', (request, response) => {
       response.status(500).json({ error });
     });
 });
+
+// Delete song
+app.delete('/api/v1/songs/:id', (request, response) => {
+  const song = request.body;
+
+  database('favorites').where({ id: request.params.id }).del()
+    .then(song => {
+      response.status(204).json({ id: song[0], song_title: song[1], artist_name: song[2], genre: song[3], song_rating: song[4]})
+    })
+    .catch(error => {
+      response.status(404).json({ error });
+    });
+});
