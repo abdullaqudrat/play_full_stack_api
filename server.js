@@ -54,3 +54,21 @@ app.post('/api/v1/songs', (request, response) => {
       response.status(500).json({ error });
     });
 });
+
+// GET SONG SHOW
+
+app.get('/api/v1/songs/:id', (request, response) => {
+  database('favorites').where('id', request.params.id).select()
+    .then(favorites => {
+      if (favorites.length) {
+        response.status(200).json(favorites);
+      } else {
+        response.status(404).json({
+          error: `Could not find song with id ${request.params.id}`
+        });
+      }
+    })
+    .catch(error => {
+      response.status(500).json({ error });
+    });
+});
