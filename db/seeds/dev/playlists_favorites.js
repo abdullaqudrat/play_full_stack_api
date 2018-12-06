@@ -1,4 +1,4 @@
-pry = require('pryjs')
+// pry = require('pryjs')
 // eval(pry.it)
 
 
@@ -48,24 +48,24 @@ exports.seed = function(knex, Promise) {
     })
     .then(function () {
       return knex('favorites').pluck('id').then(function(favoriteIds) {
-        console.log(favoriteIds)
+        // console.log(favoriteIds)
         var faveIds = favoriteIds
-        console.log(faveIds)
+        // console.log(faveIds)
         return knex('playlists').pluck('id').then(function(playlistIds) {
           var playIds = playlistIds
-          console.log(faveIds)
-          console.log(playIds)
+          // console.log(faveIds)
+          // console.log(playIds)
 
           var fave_play_ids = faveIds.map(function(faveId, index) {
             return [faveId, playIds[Math.floor(Math.random()*playIds.length)] ]
           });
           console.log(fave_play_ids)
-          var favyId = fave_play_ids.forEach(function(fave_play_id) {
-            console.log(fave_play_id[0])
-            console.log(fave_play_id[1])
-            return knex('playlists_favorites').insert({ favorite_id: fave_play_id[0], playlist_id: fave_play_id[1] }, 'id');
+          fave_play_ids.forEach(function(fave_play_id) {
+            // console.log(fave_play_id[0])
+            // console.log(fave_play_id[1])
+            return Promise.all([knex('playlists_favorites').insert({ favorite_id: fave_play_id[0], playlist_id: fave_play_id[1] })]);
           })
-          console.log(favyId)
+          // console.log(favyId)
 
         })
 
@@ -79,7 +79,7 @@ exports.seed = function(knex, Promise) {
     })
     .then(function() {
       return knex('playlists').pluck('id').then(function(ids) {
-        console.log(ids)
+        // console.log(ids)
       })
     })
 
