@@ -140,3 +140,18 @@ app.get('/api/v1/playlists/:id/songs', (request, response) => {
       response.status(500).json({ error });
     });
 });
+
+// POST FAVORITE TO PLAYLIST
+
+app.post('/api/v1/playlists/:playlist_id/songs/:id', (request, response) => {
+  const favorite_id = request.params.id;
+  const playlist_id = request.params.playlist_id;
+
+  database('playlists_favorites').insert({ favorite_id: favorite_id, playlist_id: playlist_id })
+    .then(message => {
+      response.status(201).json({ message: "Successfully added SONG_NAME to PLAYLIST_NAME"})
+    })
+    .catch(error => {
+      response.status(500).json({ error });
+    });
+});
