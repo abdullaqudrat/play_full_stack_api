@@ -107,3 +107,36 @@ app.delete('/api/v1/songs/:id', (request, response) => {
       response.status(404).json({ error });
     });
 });
+
+// GET PLAYLIST SHOW
+
+app.get('/api/v1/playlists/:id/songs', (request, response) => {
+  database('playlists')
+  .join('playlists_favorites', {'playlists.id': 'playlists_favorites.playlist_id'} )
+  .join('favorites', {'playlists_favorites.favorite_id': 'favorites.id'} )
+  .where('playlist_id', request.params.id).select()
+    .then(playlist => {
+      if (playlist.length) {
+        var favorites = playlist.map(function(p, index) {
+          return { song_title: p["song_title"],
+                   artist_name: p["artist_name"],
+                   genre: p["genre"],
+                   song_rating: p["song_rating"]
+                 }
+        })
+
+        response.status(200).json({
+          id: playlist[0]["playlist_id"],
+          playlist_name: playlist[0]["name"],
+          favorites
+        })
+      } else {
+        response.status(404).json({
+          error: `Could not find playlist with id ${request.params.id}`
+        });
+      }
+    })
+    .catch(error => {
+      response.status(500).json({ error });
+    });
+});
