@@ -111,13 +111,34 @@ app.delete('/api/v1/songs/:id', (request, response) => {
 // GET ALL PLAYLISTS
 
 app.get('/api/v1/playlists', (request, response) => {
-  database('playlists').select()
-    .then((playlists) => {
-      response.status(200).json(playlists)
+    database('playlists')
+    .join('playlists_favorites', {'playlists.id': 'playlists_favorites.playlist_id'} )
+    .join('favorites', {'playlists_favorites.favorite_id': 'favorites.id'} )
+    .select()
+    .then(query => {
+      if (query.length) {
+        var playlists = query.map(function(p, index) {
+          return { id: p["playlist_id"], name: p["name"], songs: []}
+        })
+        var final = playlists.map(function(play, index) {
+          query.map(function(q, index) {
+            if (play["id"] == q["playlist_id"]) {
+              play["songs"].push({id: q["id"], song_title: q["song_title"]});
+              return play["songs"]
+            }
+          })
+        })
+
+        response.status(200).json(final)
+      } else {
+        response.status(404).json({
+          error: `Could not find playlist with id ${request.params.id}`
+        });
+      }
     })
-    .catch((error) => {
-      response.status(500).json({ error })
-    })
+    .catch(error => {
+      response.status(500).json({ error });
+    });
 })
 // GET PLAYLIST SHOW
 
@@ -151,7 +172,3 @@ app.get('/api/v1/playlists/:id/songs', (request, response) => {
       response.status(500).json({ error });
     });
 });
-<<<<<<< HEAD
-=======
-
->>>>>>> ee3888877c628c80f7d183fc27e725ae7f0052cb
