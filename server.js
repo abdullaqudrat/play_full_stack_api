@@ -136,7 +136,7 @@ app.get('/api/v1/playlists', (request, response) => {
         var playlistFavorites = []
 
         const buildPlaylistIndex = () => {
-          for (index = 0; index < uniquePlaylistIds.length; index++) {
+          for (index = 0; index < uniquePlaylistIds.length; index ++) {
 
             playlists.forEach(function(playlist) {
               if (playlist["playlist_id"] === uniquePlaylistIds[index]) {
@@ -150,16 +150,17 @@ app.get('/api/v1/playlists', (request, response) => {
               }
             })
 
-            playlistWithFavorites = { id: uniquePlaylistIds[index][0],
-                                      favorites: playlistFavorites }
+            playlistWithFavorites = { id: uniquePlaylistIds[index],
+                                      playlist_name: uniquePlaylistIds[index + 1],
+                                      songs: playlistFavorites }
             playlistIndex.push(playlistWithFavorites)
+            index++
             playlistFavorites = []
 
           }
         }
         buildPlaylistIndex()
-        response.status(200).json(uniquePlaylistIds)
-        // response.status(200).json(playlists)
+        response.status(200).json(playlistIndex)
       } else {
         response.status(404).json({
           error: `Could not find playlist with id ${request.params.id}`
