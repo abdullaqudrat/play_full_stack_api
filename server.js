@@ -118,36 +118,48 @@ app.get('/api/v1/playlists', (request, response) => {
     .then(playlists => {
       if (playlists.length) {
 
-        var playIds = []
+        var playlistIds = []
+
         playlists.forEach(function(playlist) {
-          playIds.push(playlist["playlist_id"])
+          playlistIds.push(playlist["playlist_id"]);
+          playlistIds.push(playlist["name"])
         })
-        const distinct = (value, index, self) => {
+
+        const uniqueValues = (value, index, self) => {
           return self.indexOf(value) === index;
         }
-        const uniquePlayIds = playIds.filter(distinct);
 
-        var finalArr = []
-        var finalEl = {}
-        var faveEl = []
-        const final = () => {
-          for (i =0; i < uniquePlayIds.length; i++) {
-            playlists.map(function(p, index) {
-              if (p["playlist_id"] === uniquePlayIds[i]) {
-                faveEl.push({song_title: p["song_title"],
-                                  artist_name: p["artist_name"],
-                                  genre: p["genre"],
-                                  song_rating: p["song_rating"]
-                                })
+        const uniquePlaylistIds = playlistIds.filter(uniqueValues);
+
+        var playlistIndex = []
+        var eachPlaylistWithFavorites = {}
+        var playlistFavorites = []
+
+        const buildPlaylistIndex = () => {
+          for (index = 0; index < uniquePlaylistIds.length; index++) {
+
+            playlists.forEach(function(playlist) {
+              if (playlist["playlist_id"] === uniquePlaylistIds[index]) {
+                playlistFavorites.push({
+                  id: playlist["favorite_id"],
+                  name: playlist["song_title"],
+                  artist_name: playlist["artist_name"],
+                  genre: playlist["genre"],
+                  song_rating: playlist["song_rating"]
+                })
               }
             })
-            finalEl = {id: uniquePlayIds[i], favorites: faveEl}
-            finalArr.push(finalEl)
-            faveEl = []
+
+            playlistWithFavorites = { id: uniquePlaylistIds[index][0],
+                                      favorites: playlistFavorites }
+            playlistIndex.push(playlistWithFavorites)
+            playlistFavorites = []
+
           }
         }
-        final()
-        response.status(200).json(finalArr)
+        buildPlaylistIndex()
+        response.status(200).json(uniquePlaylistIds)
+        // response.status(200).json(playlists)
       } else {
         response.status(404).json({
           error: `Could not find playlist with id ${request.params.id}`
