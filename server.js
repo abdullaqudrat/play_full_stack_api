@@ -115,21 +115,67 @@ app.get('/api/v1/playlists', (request, response) => {
     .join('playlists_favorites', {'playlists.id': 'playlists_favorites.playlist_id'} )
     .join('favorites', {'playlists_favorites.favorite_id': 'favorites.id'} )
     .select()
-    .then(query => {
-      if (query.length) {
-        var playlists = query.map(function(p, index) {
-          return { id: p["playlist_id"], name: p["name"], songs: []}
-        })
-        var final = playlists.map(function(play, index) {
-          query.map(function(q, index) {
-            if (play["id"] == q["playlist_id"]) {
-              play["songs"].push({id: q["id"], song_title: q["song_title"]});
-              return play["songs"]
-            }
-          })
-        })
+    .then(playlists => {
+      if (playlists.length) {
+        // var favorites = playlist.map(function(p, index) {
+        //   return { song_title: p["song_title"],
+        //            artist_name: p["artist_name"],
+        //            genre: p["genre"],
+        //            song_rating: p["song_rating"]
+        //          }
+        // })
+        //
+        // response.status(200).json({
+        //   id: playlist[0]["playlist_id"],
+        //   playlist_name: playlist[0]["name"],
+        //   favorites
+        // })
 
-        response.status(200).json(final)
+        var playIds = []
+        playlists.forEach(function(playlist) {
+          playIds.push(playlist["playlist_id"])
+        })
+        const distinct = (value, index, self) => {
+          return self.indexOf(value) === index;
+        }
+        const uniquePlayIds = playIds.filter(distinct);
+
+        // var playArr = []
+        // var playHash = {}
+        // uniquePlayIds.forEach(function(uniqplayid) {
+        //   playHash["id"] = uniqplayid
+        //   playArr.push(playHash)
+        // })
+        // const uniquePlayId.map(function(uniqueplayid) {
+        var finalArr = []
+        var finalEl = ''
+        const final = () => {
+          for (i =0; i < uniquePlayIds.length; i++) {
+
+          //     return { id: uniquePlayIds[i]}
+                var favorites = playlists.map(function(p, index) {
+                  if (p["playlist_id"] === uniquePlayIds[i]) {
+                    finalArr.push({id: uniquePlayIds[i],
+                                   favorites:
+                                            {song_title: p["song_title"],
+                                             artist_name: p["artist_name"],
+                                             genre: p["genre"],
+                                             song_rating: p["song_rating"]
+                                            }
+                                  })
+                  }
+                })
+
+
+
+          }
+        }
+        final()
+        response.status(200).json(
+          // id: playlist[0]["playlist_id"],
+          // playlist_name: playlist[0]["name"],
+          finalArr
+        )
       } else {
         response.status(404).json({
           error: `Could not find playlist with id ${request.params.id}`
