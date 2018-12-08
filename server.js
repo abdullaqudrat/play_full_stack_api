@@ -117,19 +117,6 @@ app.get('/api/v1/playlists', (request, response) => {
     .select()
     .then(playlists => {
       if (playlists.length) {
-        // var favorites = playlist.map(function(p, index) {
-        //   return { song_title: p["song_title"],
-        //            artist_name: p["artist_name"],
-        //            genre: p["genre"],
-        //            song_rating: p["song_rating"]
-        //          }
-        // })
-        //
-        // response.status(200).json({
-        //   id: playlist[0]["playlist_id"],
-        //   playlist_name: playlist[0]["name"],
-        //   favorites
-        // })
 
         var playIds = []
         playlists.forEach(function(playlist) {
@@ -140,42 +127,27 @@ app.get('/api/v1/playlists', (request, response) => {
         }
         const uniquePlayIds = playIds.filter(distinct);
 
-        // var playArr = []
-        // var playHash = {}
-        // uniquePlayIds.forEach(function(uniqplayid) {
-        //   playHash["id"] = uniqplayid
-        //   playArr.push(playHash)
-        // })
-        // const uniquePlayId.map(function(uniqueplayid) {
         var finalArr = []
-        var finalEl = ''
+        var finalEl = {}
+        var faveEl = []
         const final = () => {
           for (i =0; i < uniquePlayIds.length; i++) {
-
-          //     return { id: uniquePlayIds[i]}
-                var favorites = playlists.map(function(p, index) {
-                  if (p["playlist_id"] === uniquePlayIds[i]) {
-                    finalArr.push({id: uniquePlayIds[i],
-                                   favorites:
-                                            {song_title: p["song_title"],
-                                             artist_name: p["artist_name"],
-                                             genre: p["genre"],
-                                             song_rating: p["song_rating"]
-                                            }
-                                  })
-                  }
-                })
-
-
-
+            playlists.map(function(p, index) {
+              if (p["playlist_id"] === uniquePlayIds[i]) {
+                faveEl.push({song_title: p["song_title"],
+                                  artist_name: p["artist_name"],
+                                  genre: p["genre"],
+                                  song_rating: p["song_rating"]
+                                })
+              }
+            })
+            finalEl = {id: uniquePlayIds[i], favorites: faveEl}
+            finalArr.push(finalEl)
+            faveEl = []
           }
         }
         final()
-        response.status(200).json(
-          // id: playlist[0]["playlist_id"],
-          // playlist_name: playlist[0]["name"],
-          finalArr
-        )
+        response.status(200).json(finalArr)
       } else {
         response.status(404).json({
           error: `Could not find playlist with id ${request.params.id}`
