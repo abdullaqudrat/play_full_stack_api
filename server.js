@@ -118,28 +118,28 @@ app.get('/api/v1/playlists', (request, response) => {
     .then(playlists => {
       if (playlists.length) {
 
-        var playlistIds = []
+        var playlistInfo = []
 
         playlists.forEach(function(playlist) {
-          playlistIds.push(playlist["playlist_id"]);
-          playlistIds.push(playlist["name"])
+          playlistInfo.push(playlist["playlist_id"]);
+          playlistInfo.push(playlist["name"]);
         })
 
         const uniqueValues = (value, index, self) => {
           return self.indexOf(value) === index;
         }
 
-        const uniquePlaylistIds = playlistIds.filter(uniqueValues);
+        const uniquePlaylistInfo = playlistInfo.filter(uniqueValues);
 
         var playlistIndex = []
         var eachPlaylistWithFavorites = {}
         var playlistFavorites = []
 
         const buildPlaylistIndex = () => {
-          for (index = 0; index < uniquePlaylistIds.length; index ++) {
+          for (index = 0; index < uniquePlaylistInfo.length; index ++) {
 
             playlists.forEach(function(playlist) {
-              if (playlist["playlist_id"] === uniquePlaylistIds[index]) {
+              if (playlist["playlist_id"] === uniquePlaylistInfo[index]) {
                 playlistFavorites.push({
                   id: playlist["favorite_id"],
                   name: playlist["song_title"],
@@ -150,8 +150,8 @@ app.get('/api/v1/playlists', (request, response) => {
               }
             })
 
-            playlistWithFavorites = { id: uniquePlaylistIds[index],
-                                      playlist_name: uniquePlaylistIds[index + 1],
+            playlistWithFavorites = { id: uniquePlaylistInfo[index],
+                                      playlist_name: uniquePlaylistInfo[index + 1],
                                       songs: playlistFavorites }
             playlistIndex.push(playlistWithFavorites)
             index++
