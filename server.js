@@ -153,10 +153,10 @@ app.post('/api/v1/playlists/:playlist_id/songs/:id', (request, response) => {
       .join('playlists_favorites', {'favorites.id': 'playlists_favorites.favorite_id'} )
       .join('playlists', {'playlists_favorites.playlist_id': 'playlists.id'} )
       .where('favorite_id', request.params.id).select()
-      .then(message => {
+      .then(returnedInfo => {
       // return message
 
-      response.status(201).json({ message })
+      response.status(201).json({ "message": `Successfully added ${returnedInfo[0]["song_title"]} to ${returnedInfo[0]["name"]} playlist`,  returnedInfo })
     })
     .catch(error => {
       response.status(500).json({ error });
