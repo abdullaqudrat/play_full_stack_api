@@ -203,3 +203,21 @@ app.get('/api/v1/playlists/:id/songs', (request, response) => {
       response.status(500).json({ error });
     });
 });
+
+// DELETE FAVORITE FROM PLAYLIST
+app.delete('/api/v1/playlists/:playlist_id/songs/:id', (request, response) => {
+  const favoriteId = request.params.id;
+  const playlistId = request.params.playlist_id;
+  database()
+  database('playlists_favorites').where({ favorite_id: favoriteId, playlist_id: playlistId }).del()
+  .then(() => { database('favorites').where('id', favoriteId).select()
+  })
+  .then(query => {
+    pry = require('pryjs') ; eval(pry.it)
+      response.status(204).json({ "message": `Successfully added ${query.song_title} to ${query.name}`})
+  })
+    .catch(error => {
+      response.status(404).json({ error });
+    });
+});
+
