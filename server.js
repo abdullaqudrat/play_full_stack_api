@@ -61,7 +61,7 @@ app.get('/api/v1/favorites/:id', (request, response) => {
   database('favorites').where('id', request.params.id).select()
     .then(favorites => {
       if (favorites.length) {
-        response.status(200).json(favorites);
+        response.status(200).json({ id: favorites[0], song_title: favorites[1], artist_name: favorites[2], genre: favorites[3], song_rating: favorites[4]});
       } else {
         response.status(404).json({
           error: `Could not find song with id ${request.params.id}`
@@ -95,7 +95,8 @@ app.patch('/api/v1/favorites/:id', (request, response) => {
     });
 });
 
-// Delete song
+// DELETE FAVORITES
+
 app.delete('/api/v1/favorites/:id', (request, response) => {
 
   database('favorites').where({ id: request.params.id }).del()
@@ -208,7 +209,7 @@ app.delete('/api/v1/playlists/:playlist_id/favorites/:id', (request, response) =
   const favoriteId = request.params.id;
   const playlistId = request.params.playlist_id;
   
-  async function aFunction() {database('favorites')
+  async function deletePlaylistsFavorites() {database('favorites')
   .join('playlists_favorites', {'favorites.id': 'playlists_favorites.favorite_id'} )
   .join('playlists', {'playlists_favorites.playlist_id': 'playlists.id'} )
   .where({ favorite_id: favoriteId, playlist_id: playlistId }).select().limit(1)
@@ -219,7 +220,7 @@ app.delete('/api/v1/playlists/:playlist_id/favorites/:id', (request, response) =
     .catch(error => {
       response.status(404).json({ error });
     });}
-    aFunction();
+    deletePlaylistsFavorites();
 });
 
 // POST FAVORITE TO PLAYLIST
