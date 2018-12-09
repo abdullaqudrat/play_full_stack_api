@@ -203,3 +203,26 @@ app.get('/api/v1/playlists/:id/songs', (request, response) => {
       response.status(500).json({ error });
     });
 });
+
+// POST FAVORITE TO PLAYLIST
+
+app.post('/api/v1/playlists/:playlist_id/songs/:id', (request, response) => {
+  const favorite_id = request.params.id;
+  const playlist_id = request.params.playlist_id;
+
+  database('playlists_favorites').insert({ favorite_id: favorite_id, playlist_id: playlist_id })
+    .then(
+      database('favorites')
+      .join('playlists_favorites', {'favorites.id': 'playlists_favorites.favorite_id'} )
+      .join('playlists', {'playlists_favorites.playlist_id': 'playlists.id'} )
+      .where('favorite_id', request.params.id).select().limit(1)
+      .then(returnedInfo => {
+        response.status(201).json({
+          "message": `Successfully added ${returnedInfo[0]["song_title"]} to ${returnedInfo[0]["name"]} playlist`
+        })
+      })
+      .catch(error => {
+        response.status(500).json({ error });
+      })
+    )
+});
