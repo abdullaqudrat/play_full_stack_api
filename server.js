@@ -148,10 +148,17 @@ app.post('/api/v1/playlists/:playlist_id/songs/:id', (request, response) => {
   const playlist_id = request.params.playlist_id;
 
   database('playlists_favorites').insert({ favorite_id: favorite_id, playlist_id: playlist_id })
-    .then(message => {
-      response.status(201).json({ message: "Successfully added SONG_NAME to PLAYLIST_NAME"})
+    .then(
+      database('favorites')
+      .join('playlists_favorites', {'favorites.id': 'playlists_favorites.favorite_id'} )
+      .join('playlists', {'playlists_favorites.playlist_id': 'playlists.id'} )
+      .where('favorite_id', request.params.id).select()
+      .then(message => {
+      // return message
+
+      response.status(201).json({ message })
     })
     .catch(error => {
       response.status(500).json({ error });
-    });
+    }))
 });
