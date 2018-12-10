@@ -1,10 +1,12 @@
-// define database
-const environment = process.env.NODE_ENV || 'development';
-const configuration = require('../../../../config/knexfile')[environment];
-const database = require('knex')(configuration);
+// // define database
+// const environment = process.env.NODE_ENV || 'development';
+// const configuration = require('../../../../config/knexfile')[environment];
+// const database = require('knex')(configuration);
+
+const Favorite = require('../../../models/favorite')
 
 const index = (request, response) => {
-  database('favorites').select()
+  Favorite.all()
     .then((favorites) => {
       response.status(200).json(favorites)
     })
