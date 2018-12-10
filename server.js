@@ -1,5 +1,11 @@
 const express = require('express');
 const app = express();
+
+const route = require('./config/routes.js')
+
+app.use('/', route.welcomeRoute)
+
+
 const bodyParser = require('body-parser');
 
 const environment = process.env.NODE_ENV || 'development';
@@ -11,9 +17,9 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.set('port', process.env.PORT || 3000);
 app.locals.title = 'Play API';
 
-app.get('/', (request, response) => {
-  response.send('Welcome to Play API');
-});
+// app.get('/', (request, response) => {
+//   response.send('Welcome to Play API');
+// });
 
 app.listen(app.get('port'), () => {
   console.log(`${app.locals.title} is running on ${app.get('port')}.`);
@@ -208,7 +214,7 @@ app.get('/api/v1/playlists/:id/favorites', (request, response) => {
 app.delete('/api/v1/playlists/:playlist_id/favorites/:id', (request, response) => {
   const favoriteId = request.params.id;
   const playlistId = request.params.playlist_id;
-  
+
   async function deletePlaylistsFavorites() {database('favorites')
   .join('playlists_favorites', {'favorites.id': 'playlists_favorites.favorite_id'} )
   .join('playlists', {'playlists_favorites.playlist_id': 'playlists.id'} )
