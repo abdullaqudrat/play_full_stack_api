@@ -35,7 +35,7 @@ app.get('/api/v1/favorites', (request, response) => {
 
 // POST NEW FAVORITE
 
-app.post('/api/v1/songs', (request, response) => {
+app.post('/api/v1/favorites', (request, response) => {
   const song = request.body;
 
   for (let requiredParameter of ['song_title', 'artist_name', 'genre', 'song_rating']) {
@@ -55,13 +55,13 @@ app.post('/api/v1/songs', (request, response) => {
     });
 });
 
-// GET SONG SHOW
+// GET FAVORITE SHOW
 
-app.get('/api/v1/songs/:id', (request, response) => {
+app.get('/api/v1/favorites/:id', (request, response) => {
   database('favorites').where('id', request.params.id).select()
     .then(favorites => {
       if (favorites.length) {
-        response.status(200).json(favorites);
+        response.status(200).json({ id: favorites[0], song_title: favorites[1], artist_name: favorites[2], genre: favorites[3], song_rating: favorites[4]});
       } else {
         response.status(404).json({
           error: `Could not find song with id ${request.params.id}`
@@ -73,9 +73,9 @@ app.get('/api/v1/songs/:id', (request, response) => {
     });
 });
 
-// PATCH SONG
+// PATCH FAVORITE
 
-app.patch('/api/v1/songs/:id', (request, response) => {
+app.patch('/api/v1/favorites/:id', (request, response) => {
   const song = request.body;
 
   for (let requiredParameter of ['song_title', 'artist_name', 'genre', 'song_rating']) {
@@ -95,13 +95,13 @@ app.patch('/api/v1/songs/:id', (request, response) => {
     });
 });
 
-// Delete song
-app.delete('/api/v1/songs/:id', (request, response) => {
-  const song = request.body;
+// DELETE FAVORITES
+
+app.delete('/api/v1/favorites/:id', (request, response) => {
 
   database('favorites').where({ id: request.params.id }).del()
     .then(song => {
-      response.status(204).json({ id: song[0], song_title: song[1], artist_name: song[2], genre: song[3], song_rating: song[4]})
+      response.status(204).json()
     })
     .catch(error => {
       response.status(404).json({ error });
@@ -152,7 +152,7 @@ app.get('/api/v1/playlists', (request, response) => {
 
             playlistWithFavorites = { id: uniquePlaylistInfo[index],
                                       playlist_name: uniquePlaylistInfo[index + 1],
-                                      songs: playlistFavorites }
+                                      favorites: playlistFavorites }
             playlistIndex.push(playlistWithFavorites)
             index++
             playlistFavorites = []
@@ -173,7 +173,7 @@ app.get('/api/v1/playlists', (request, response) => {
 })
 // GET PLAYLIST SHOW
 
-app.get('/api/v1/playlists/:id/songs', (request, response) => {
+app.get('/api/v1/playlists/:id/favorites', (request, response) => {
   database('playlists')
   .join('playlists_favorites', {'playlists.id': 'playlists_favorites.playlist_id'} )
   .join('favorites', {'playlists_favorites.favorite_id': 'favorites.id'} )
@@ -204,9 +204,28 @@ app.get('/api/v1/playlists/:id/songs', (request, response) => {
     });
 });
 
+// DELETE FAVORITE FROM PLAYLIST
+app.delete('/api/v1/playlists/:playlist_id/favorites/:id', (request, response) => {
+  const favoriteId = request.params.id;
+  const playlistId = request.params.playlist_id;
+  
+  async function deletePlaylistsFavorites() {database('favorites')
+  .join('playlists_favorites', {'favorites.id': 'playlists_favorites.favorite_id'} )
+  .join('playlists', {'playlists_favorites.playlist_id': 'playlists.id'} )
+  .where({ favorite_id: favoriteId, playlist_id: playlistId }).select().limit(1)
+  .then(returnedInfo => { return info = returnedInfo})
+    .then(await database('playlists_favorites').where({ favorite_id: favoriteId, playlist_id: playlistId }).del())
+    .then(x => { response.status(200).json({ "message": `Successfully removed ${info[0]["song_title"]} from ${info[0]["name"]} playlist`})
+  })
+    .catch(error => {
+      response.status(404).json({ error });
+    });}
+    deletePlaylistsFavorites();
+});
+
 // POST FAVORITE TO PLAYLIST
 
-app.post('/api/v1/playlists/:playlist_id/songs/:id', (request, response) => {
+app.post('/api/v1/playlists/:playlist_id/favorites/:id', (request, response) => {
   const favorite_id = request.params.id;
   const playlist_id = request.params.playlist_id;
 
