@@ -10,12 +10,14 @@ const find = (id) => database('favorites')
   .where('id', id)
   .select()
 
-const create = (song, array) => database('favorites')
-  .insert(song, array)
+const create = (returnValue, array) => database('favorites')
+  .insert(returnValue, array)
 
+const update = (id, returnValue, array) => database('favorites').where({ id: id }).update(returnValue, array)
 
 module.exports = {
   all,
   find,
   create,
+  update,
 }
