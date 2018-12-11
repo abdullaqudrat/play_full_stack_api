@@ -13,7 +13,9 @@ const find = (id) => database('favorites')
 const create = (returnValue, array) => database('favorites')
   .insert(returnValue, array)
 
-const update = (id, returnValue, array) => database('favorites').where({ id: id }).update(returnValue, array)
+const update = (id, returnValue, array) => database('favorites')
+  .where({ id: id })
+  .update(returnValue, array)
 
 module.exports = {
   all,
