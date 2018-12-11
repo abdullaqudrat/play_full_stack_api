@@ -42,12 +42,9 @@ const destroy = (request, response) => {
     const favoriteId = request.params.id;
     const playlistId = request.params.playlist_id;
   
-    async function deletePlaylistsFavorites() {database('favorites')
-    .join('playlists_favorites', {'favorites.id': 'playlists_favorites.favorite_id'} )
-    .join('playlists', {'playlists_favorites.playlist_id': 'playlists.id'} )
-    .where({ favorite_id: favoriteId, playlist_id: playlistId }).select().limit(1)
+    async function deletePlaylistsFavorites() {Playlist.findJoin(favoriteId, playlistId)
     .then(returnedInfo => { return info = returnedInfo})
-      .then(await database('playlists_favorites').where({ favorite_id: favoriteId, playlist_id: playlistId }).del())
+      .then(await Playlist.deleteJoin(favoriteId, playlistId))
       .then(x => { response.status(200).json({ "message": `Successfully removed ${info[0]["song_title"]} from ${info[0]["name"]} playlist`})
     })
       .catch(error => {
