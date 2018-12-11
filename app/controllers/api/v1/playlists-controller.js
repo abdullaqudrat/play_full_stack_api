@@ -18,7 +18,6 @@ const index = (request, response) => {
       const uniquePlaylistInfo = playlistInfo.filter(uniqueValues);
 
       var playlistIndex = []
-      var eachPlaylistWithFavorites = {}
       var playlistFavorites = []
 
       const buildPlaylistIndex = () => {
