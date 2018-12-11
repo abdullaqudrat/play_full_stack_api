@@ -6,6 +6,7 @@ const welcomeRoute = router.get('/', welcomeController.index);
 
 const favoritesController = require('../app/controllers/api/v1/favorites-controller')
 const favoritesIndexRoute = router.get('/api/v1/favorites', favoritesController.index)
+const favoritesShowRoute = router.get('/api/v1/favorites/:id', favoritesController.show)
 
 const playlistsController = require('../app/controllers/api/v1/playlists-controller')
 const playlistsIndexRoute = router.get('/api/v1/playlists', playlistsController.index)
@@ -16,6 +17,7 @@ const playlistsDestroyRoute = router.delete('/api/v1/playlists/:playlist_id/favo
 module.exports = {
   welcomeRoute,
   favoritesIndexRoute,
+  favoritesShowRoute,
   playlistsIndexRoute,
   playlistsShowRoute,
   playlistsCreateRoute,
