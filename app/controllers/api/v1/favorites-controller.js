@@ -70,9 +70,20 @@ const create = (request, response) => {
     });
   }
 
+  const destroy = (request, response) => {
+  Favorite.find(request.params.id).del()
+    .then(song => {
+      response.status(204).json()
+    })
+    .catch(error => {
+      response.status(404).json({ error });
+    });
+  }
+
 module.exports = {
   index,
   show,
   create,
   update,
+  destroy,
 }
