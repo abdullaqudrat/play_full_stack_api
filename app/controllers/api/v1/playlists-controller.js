@@ -38,6 +38,23 @@ const show = (request, response) => {
   });
 }
 
+const create = (request, response) => {
+    const favoriteId = request.params.id;
+    const playlistId = request.params.playlist_id;
+    Playlist.insertFavorite(playlistId, favoriteId)
+        .then(
+        Playlist.findFavorite(favoriteId)
+        .then(returnedInfo => {
+            response.status(201).json({
+            "message": `Successfully added ${returnedInfo[0]["song_title"]} to ${returnedInfo[0]["name"]} playlist`
+            })
+        })
+        .catch(error => {
+            response.status(500).json({ error });
+        })
+    )
+    }
+
 const destroy = (request, response) => {
     const favoriteId = request.params.id;
     const playlistId = request.params.playlist_id;
@@ -54,5 +71,5 @@ const destroy = (request, response) => {
   }
 
 module.exports = {
-  index, show, destroy,
+  index, show, destroy, create,
 }
