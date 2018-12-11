@@ -115,67 +115,68 @@ app.delete('/api/v1/favorites/:id', (request, response) => {
 
 // GET ALL PLAYLISTS
 
-app.get('/api/v1/playlists', (request, response) => {
-    database('playlists')
-    .join('playlists_favorites', {'playlists.id': 'playlists_favorites.playlist_id'} )
-    .join('favorites', {'playlists_favorites.favorite_id': 'favorites.id'} )
-    .select()
-    .then(playlists => {
-      if (playlists.length) {
+// app.get('/api/v1/playlists', (request, response) => {
+//     database('playlists')
+//     .join('playlists_favorites', {'playlists.id': 'playlists_favorites.playlist_id'} )
+//     .join('favorites', {'playlists_favorites.favorite_id': 'favorites.id'} )
+//     .select()
+//     .then(playlists => {
+//       if (playlists.length) {
 
-        var playlistInfo = []
+//         var playlistInfo = []
 
-        playlists.forEach(function(playlist) {
-          playlistInfo.push(playlist["playlist_id"]);
-          playlistInfo.push(playlist["name"]);
-        })
+//         playlists.forEach(function(playlist) {
+//           playlistInfo.push(playlist["playlist_id"]);
+//           playlistInfo.push(playlist["name"]);
+//         })
 
-        const uniqueValues = (value, index, self) => {
-          return self.indexOf(value) === index;
-        }
+//         const uniqueValues = (value, index, self) => {
+//           return self.indexOf(value) === index;
+//         }
 
-        const uniquePlaylistInfo = playlistInfo.filter(uniqueValues);
+//         const uniquePlaylistInfo = playlistInfo.filter(uniqueValues);
 
-        var playlistIndex = []
-        var eachPlaylistWithFavorites = {}
-        var playlistFavorites = []
+//         var playlistIndex = []
+//         var eachPlaylistWithFavorites = {}
+//         var playlistFavorites = []
 
-        const buildPlaylistIndex = () => {
-          for (index = 0; index < uniquePlaylistInfo.length; index ++) {
+//         const buildPlaylistIndex = () => {
+//           for (index = 0; index < uniquePlaylistInfo.length; index ++) {
 
-            playlists.forEach(function(playlist) {
-              if (playlist["playlist_id"] === uniquePlaylistInfo[index]) {
-                playlistFavorites.push({
-                  id: playlist["favorite_id"],
-                  name: playlist["song_title"],
-                  artist_name: playlist["artist_name"],
-                  genre: playlist["genre"],
-                  song_rating: playlist["song_rating"]
-                })
-              }
-            })
+//             playlists.forEach(function(playlist) {
+//               if (playlist["playlist_id"] === uniquePlaylistInfo[index]) {
+//                 playlistFavorites.push({
+//                   id: playlist["favorite_id"],
+//                   name: playlist["song_title"],
+//                   artist_name: playlist["artist_name"],
+//                   genre: playlist["genre"],
+//                   song_rating: playlist["song_rating"]
+//                 })
+//               }
+//             })
 
-            playlistWithFavorites = { id: uniquePlaylistInfo[index],
-                                      playlist_name: uniquePlaylistInfo[index + 1],
-                                      favorites: playlistFavorites }
-            playlistIndex.push(playlistWithFavorites)
-            index++
-            playlistFavorites = []
+//             playlistWithFavorites = { id: uniquePlaylistInfo[index],
+//                                       playlist_name: uniquePlaylistInfo[index + 1],
+//                                       favorites: playlistFavorites }
+//             playlistIndex.push(playlistWithFavorites)
+//             index++
+//             playlistFavorites = []
 
-          }
-        }
-        buildPlaylistIndex()
-        response.status(200).json(playlistIndex)
-      } else {
-        response.status(404).json({
-          error: `Could not find playlist with id ${request.params.id}`
-        });
-      }
-    })
-    .catch(error => {
-      response.status(500).json({ error });
-    });
-})
+//           }
+//         }
+//         buildPlaylistIndex()
+//         response.status(200).json(playlistIndex)
+//       } else {
+//         response.status(404).json({
+//           error: `Could not find playlist with id ${request.params.id}`
+//         });
+//       }
+//     })
+//     .catch(error => {
+//       response.status(500).json({ error });
+//     });
+// })
+
 // GET PLAYLIST SHOW
 
 // app.get('/api/v1/playlists/:id/favorites', (request, response) => {
