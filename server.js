@@ -5,6 +5,9 @@ const route = require('./config/routes')
 app.use('/', route.welcomeRoute);
 app.use('/api/v1/favorites', route.favoritesIndexRoute);
 
+// app.use('/api/v1/playlists', route.playlistsIndexRoute);
+// app.use('/api/v1/playlists/:id/songs', route.playlistsIndexRoute);
+
 
 const bodyParser = require('body-parser');
 
@@ -179,36 +182,36 @@ app.get('/api/v1/playlists', (request, response) => {
 })
 // GET PLAYLIST SHOW
 
-app.get('/api/v1/playlists/:id/favorites', (request, response) => {
-  database('playlists')
-  .join('playlists_favorites', {'playlists.id': 'playlists_favorites.playlist_id'} )
-  .join('favorites', {'playlists_favorites.favorite_id': 'favorites.id'} )
-  .where('playlist_id', request.params.id).select()
-    .then(playlist => {
-      if (playlist.length) {
-        var favorites = playlist.map(function(p, index) {
-          return { song_title: p["song_title"],
-                   artist_name: p["artist_name"],
-                   genre: p["genre"],
-                   song_rating: p["song_rating"]
-                 }
-        })
+// app.get('/api/v1/playlists/:id/favorites', (request, response) => {
+//   database('playlists')
+//   .join('playlists_favorites', {'playlists.id': 'playlists_favorites.playlist_id'} )
+//   .join('favorites', {'playlists_favorites.favorite_id': 'favorites.id'} )
+//   .where('playlist_id', request.params.id).select()
+//     .then(playlist => {
+//       if (playlist.length) {
+//         var favorites = playlist.map(function(p, index) {
+//           return { song_title: p["song_title"],
+//                    artist_name: p["artist_name"],
+//                    genre: p["genre"],
+//                    song_rating: p["song_rating"]
+//                  }
+//         })
 
-        response.status(200).json({
-          id: playlist[0]["playlist_id"],
-          playlist_name: playlist[0]["name"],
-          favorites
-        })
-      } else {
-        response.status(404).json({
-          error: `Could not find playlist with id ${request.params.id}`
-        });
-      }
-    })
-    .catch(error => {
-      response.status(500).json({ error });
-    });
-});
+//         response.status(200).json({
+//           id: playlist[0]["playlist_id"],
+//           playlist_name: playlist[0]["name"],
+//           favorites
+//         })
+//       } else {
+//         response.status(404).json({
+//           error: `Could not find playlist with id ${request.params.id}`
+//         });
+//       }
+//     })
+//     .catch(error => {
+//       response.status(500).json({ error });
+//     });
+// });
 
 // DELETE FAVORITE FROM PLAYLIST
 app.delete('/api/v1/playlists/:playlist_id/favorites/:id', (request, response) => {

@@ -8,10 +8,12 @@ const favoritesController = require('../app/controllers/api/v1/favorites-control
 const favoritesIndexRoute = router.get('/api/v1/favorites', favoritesController.index)
 
 const playlistsController = require('../app/controllers/api/v1/playlists-controller')
-const playlistsIndexRoute = router.get('/api/v1/playlists', playlistsController.index)
+// const playlistsIndexRoute = router.get('/api/v1/playlists', playlistsController.index)
+const playlistsShowRoute = router.get('/api/v1/playlists/:id/songs', playlistsController.show)
 
 module.exports = {
   welcomeRoute,
   favoritesIndexRoute,
-  playlistsIndexRoute,
+  // playlistsIndexRoute,
+  playlistsShowRoute
 }
