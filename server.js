@@ -5,10 +5,6 @@ const route = require('./config/routes')
 app.use('/', route.welcomeRoute);
 app.use('/api/v1/favorites', route.favoritesIndexRoute);
 
-// app.use('/api/v1/playlists', route.playlistsIndexRoute);
-// app.use('/api/v1/playlists/:id/songs', route.playlistsIndexRoute);
-
-
 const bodyParser = require('body-parser');
 
 const environment = process.env.NODE_ENV || 'development';
@@ -214,27 +210,26 @@ app.get('/api/v1/playlists', (request, response) => {
 // });
 
 // DELETE FAVORITE FROM PLAYLIST
-app.delete('/api/v1/playlists/:playlist_id/favorites/:id', (request, response) => {
-  const favoriteId = request.params.id;
-  const playlistId = request.params.playlist_id;
+// app.delete('/api/v1/playlists/:playlist_id/favorites/:id', (request, response) => {
+//   const favoriteId = request.params.id;
+//   const playlistId = request.params.playlist_id;
 
-  async function deletePlaylistsFavorites() {Playlist.findBoth(favoriteId, playlistId)
-  .then(returnedInfo => { return info = returnedInfo})
-    .then(await database('playlists_favorites').where({ favorite_id: favoriteId, playlist_id: playlistId }).del())
-    .then(x => { response.status(200).json({ "message": `Successfully removed ${info[0]["song_title"]} from ${info[0]["name"]} playlist`})
-  })
-    .catch(error => {
-      response.status(404).json({ error });
-    });}
-    deletePlaylistsFavorites();
-});
+//   async function deletePlaylistsFavorites() {Playlist.findBoth(favoriteId, playlistId)
+//   .then(returnedInfo => { return info = returnedInfo})
+//     .then(await database('playlists_favorites').where({ favorite_id: favoriteId, playlist_id: playlistId }).del())
+//     .then(x => { response.status(200).json({ "message": `Successfully removed ${info[0]["song_title"]} from ${info[0]["name"]} playlist`})
+//   })
+//     .catch(error => {
+//       response.status(404).json({ error });
+//     });}
+//     deletePlaylistsFavorites();
+// });
 
 // POST FAVORITE TO PLAYLIST
 
 app.post('/api/v1/playlists/:playlist_id/favorites/:id', (request, response) => {
   const favorite_id = request.params.id;
   const playlist_id = request.params.playlist_id;
-
   database('playlists_favorites').insert({ favorite_id: favorite_id, playlist_id: playlist_id })
     .then(
       database('favorites')
