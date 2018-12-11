@@ -14,9 +14,14 @@ const find = (id) => database('playlists')
     .where('playlist_id', id)
     .select()
   
+const findBoth = (favoriteId, playlistId) => database('favorites')
+.join('playlists_favorites', {'favorites.id': 'playlists_favorites.favorite_id'} )
+.join('playlists', {'playlists_favorites.playlist_id': 'playlists.id'} )
+.where({ favorite_id: favoriteId, playlist_id: playlistId }).select().limit(1)
+  
 
 
 
 module.exports = {
-  all, find,
+  all, find, findBoth,
 }
