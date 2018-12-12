@@ -25,7 +25,6 @@ beforeEach((done) => {
         throw error;
       });
   });
-
   afterEach((done) => {
     database.migrate.rollback()
     .then(() => done())
@@ -39,18 +38,18 @@ describe('API Routes', () => {
         chai.request(server)
         .get('/')
         .end((err, response) => {
-          response.should.have.status(200);
-          response.should.be.html;
-          response.res.text.should.equal('Welcome to Play API');
-          done();
+            response.should.have.status(200);
+            response.should.be.html;
+            response.res.text.should.equal('Welcome to Play API');
+            done();
         });
     });
     it('should return a 404 for a route that does not exist', done => {
         chai.request(server)
         .get('/sad')
         .end((err, response) => {
-          response.should.have.status(404);
-          done();
+            response.should.have.status(404);
+            done();
         });
     });
     it('should return favorites', done => {
@@ -64,14 +63,46 @@ describe('API Routes', () => {
             response.body[0].should.have.property('id');
             response.body[0].id.should.equal(1);
             response.body[0].should.have.property('song_title');
-            response.body[0].song_title.should.equal('Roxanne');
+            response.body[0].song_title.should.equal('Fight Me');
             response.body[0].should.have.property('artist_name');
-            response.body[0].artist_name.should.equal('The Police');
+            response.body[0].artist_name.should.equal('Rejects');
             response.body[0].should.have.property('genre');
             response.body[0].genre.should.equal('Rock');
             response.body[0].should.have.property('song_rating');
             response.body[0].song_rating.should.equal(34);
             done();
+        });
+    });
+    it('should return a favorite', done => {
+        chai.request(server)
+        .get('/api/v1/favorites/1')
+        .end((err, response) => {
+            response.should.have.status(200);
+            response.should.be.json;
+            response.body.should.be.a('Object');
+            response.body.should.have.property('id');
+            response.body.id.should.equal(1);
+            response.body.should.have.property('song_title');
+            response.body.song_title.should.equal('Fight Me');
+            response.body.should.have.property('artist_name');
+            response.body.artist_name.should.equal('Rejects');
+            response.body.should.have.property('genre');
+            response.body.genre.should.equal('Rock');
+            response.body.should.have.property('song_rating');
+            response.body.song_rating.should.equal(34);
+            done();
+        });
+    });
+    it('should return a 404 for a favorite that does not exist', done => {
+        chai.request(server)
+        .get('/api/v1/favorites/100')
+        .end((err, response) => {
+            response.should.have.status(404);
+            response.should.be.json;
+            response.body.should.be.a('Object');
+            response.body.should.have.property('error');
+            response.body.error.should.equal('Could not find song with id 100');
+          done();
         });
     });
 });
