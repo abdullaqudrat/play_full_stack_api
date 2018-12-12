@@ -218,13 +218,40 @@ describe('API Routes', () => {
             response.should.have.status(200);
             response.should.be.json;
             response.body.should.be.a('array');
-            response.body[0].should.have.property('id');
+            response.body[0].should.have.property('id')
             response.body[0].should.have.property('name');
             response.body[0]['favorites'][0].should.have.property('song_title');
             response.body[0]['favorites'][0].should.have.property('artist_name');
             response.body[0]['favorites'][0].should.have.property('genre');
             response.body[0]['favorites'][0].should.have.property('song_rating');
             done();
+        });
+    });
+    it('should return a playlist', done => {
+        chai.request(server)
+        .get('/api/v1/playlists/1/favorites')
+        .end((err, response) => {
+            response.should.have.status(200);
+            response.should.be.json;
+            response.body.should.be.a('Object');
+            response.body.should.have.property('id');
+            response.body['favorites'][0].should.have.property('song_title');
+            response.body['favorites'][0].should.have.property('artist_name');
+            response.body['favorites'][0].should.have.property('genre');
+            response.body['favorites'][0].should.have.property('song_rating');
+            done();
+        });
+    });
+    it('should return a 404 for a playlist that does not exist', done => {
+        chai.request(server)
+        .get('/api/v1/playlists/100/favorites')
+        .end((err, response) => {
+            response.should.have.status(404);
+            response.should.be.json;
+            response.body.should.be.a('Object');
+            response.body.should.have.property('error')
+            response.body.error.should.equal('Could not find playlist with id 100');
+          done();
         });
     });
 });
