@@ -9,10 +9,10 @@ module.exports = {
       directory: './db/migrations'
     },
     seeds: {
-      directory: './db/seeds/dev'
+      directory: './db/seeds/test'
     }
   },
-  
+
   development: {
     client: 'pg',
     connection: 'postgres://localhost/play',
