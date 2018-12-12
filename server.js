@@ -23,3 +23,5 @@ app.use('/api/v1/playlists', route.playlistsIndexRoute);
 app.use('/api/v1/playlists/:playlist_id/favorites', route.playlistsShowRoute);
 app.use('/api/v1/playlists/:playlist_id/favorites/:id', route.playlistsCreateRoute);
 app.use('/api/v1/playlists/:playlist_id/favorites/:id', route.playlistsDestroyRoute);
+
+module.exports = app
