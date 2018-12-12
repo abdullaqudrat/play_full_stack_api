@@ -81,12 +81,20 @@ const create = (request, response) => {
   }
 
   const destroy = (request, response) => {
-  Favorite.find(request.params.id).del()
+  Favorite.find(request.params.id)
     .then(favorite => {
-      response.status(204).json()
+      if (favorite.length) {
+        Favorite.find(request.params.id).del()
+          .then(x => {response.status(204).json()
+          })
+      } else {
+        response.status(404).json({
+          error: `Could not find favorite with id ${request.params.id}`
+        });
+      }
     })
     .catch(error => {
-      response.status(404).json({ error });
+      response.status(500).json({ error });
     });
   }
 
