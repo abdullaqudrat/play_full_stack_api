@@ -27,7 +27,7 @@ const index = (request, response) => {
             if (playlist["playlist_id"] === uniquePlaylistInfo[index]) {
               playlistFavorites.push({
                 id: playlist["favorite_id"],
-                name: playlist["song_title"],
+                song_title: playlist["song_title"],
                 artist_name: playlist["artist_name"],
                 genre: playlist["genre"],
                 song_rating: playlist["song_rating"]
@@ -36,7 +36,7 @@ const index = (request, response) => {
           })
 
           playlistWithFavorites = { id: uniquePlaylistInfo[index],
-                                    playlist_name: uniquePlaylistInfo[index + 1],
+                                    name: uniquePlaylistInfo[index + 1],
                                     favorites: playlistFavorites }
           playlistIndex.push(playlistWithFavorites)
           index++
