@@ -265,7 +265,7 @@ describe('API Routes', () => {
             done();
         });
     });
-    it('should 404 when a favorite does not exist when posting to playlist', done => {
+    xit('should 404 when a favorite does not exist when posting to playlist', done => {
         chai.request(server)
         .post('/api/v1/playlists/1/favorites/100')
         .end((err, response) => {
@@ -273,25 +273,25 @@ describe('API Routes', () => {
             done();
         });
     });
-    // it('should delete a favorite from playlist', done => {
-    //     chai.request(server)
-    //     .delete('/api/v1/playlists/1/favorites/1')
-    //     .end((err, response) => {
-    //         response.should.have.status(200);
-    //         response.should.be.json;
-    //         response.body.should.be.a('Object');
-    //         response.body.should.have.property('message');
-    //         done();
-    //     });
-    // });
-    // it('should 404 when a favorite does not exist when deleteing from playlist', done => {
-    //     chai.request(server)
-    //     .delete('/api/v1/playlists/1/favorites/100')
-    //     .end((err, response) => {
-    //         response.should.have.status(404);
-    //         done();
-    //     });
-    // });
+    xit('should delete a favorite from playlist', done => {
+        chai.request(server)
+        .delete('/api/v1/playlists/1/favorites/1')
+        .end((err, response) => {
+            response.should.have.status(200);
+            response.should.be.json;
+            response.body.should.be.a('Object');
+            response.body.should.have.property('message');
+            done();
+        });
+    });
+    xit('should 404 when a favorite does not exist when deleteing from playlist', done => {
+        chai.request(server)
+        .delete('/api/v1/playlists/1/favorites/100')
+        .end((err, response) => {
+            response.should.have.status(404);
+            done();
+        });
+    });
 });
 
 
