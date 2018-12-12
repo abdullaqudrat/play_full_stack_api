@@ -195,6 +195,22 @@ describe('API Routes', () => {
           done();
         });
     });
+    it('should return a 204 for a successful delete favorite', done => {
+        chai.request(server)
+        .delete('/api/v1/favorites/1')
+        .end((err, response) => {
+            response.should.have.status(204);
+          done();
+        });
+    });
+    it('should return a 404 for a failed delete favorite', done => {
+        chai.request(server)
+        .delete('/api/v1/favorites/100')
+        .end((err, response) => {
+            response.should.have.status(404);
+          done();
+        });
+    });
 });
 
 
