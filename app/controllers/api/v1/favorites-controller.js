@@ -17,9 +17,9 @@ const index = (request, response) => {
 
 const show = (request, response) => {
   Favorite.find(request.params.id)
-    .then(favorites => {
-      if (favorites.length) {
-        response.status(200).json({ id: favorites[0], song_title: favorites[1], artist_name: favorites[2], genre: favorites[3], song_rating: favorites[4]});
+    .then(favorite => {
+      if (favorite.length) {
+        response.status(200).json({ id: favorite[0]["id"], song_title: favorite[0]["song_title"], artist_name: favorite[0]["artist_name"], genre: favorite[0]["genre"], song_rating: favorite[0]["song_rating"]});
       } else {
         response.status(404).json({
           error: `Could not find song with id ${request.params.id}`
