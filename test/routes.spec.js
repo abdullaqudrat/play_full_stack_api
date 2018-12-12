@@ -105,21 +105,51 @@ describe('API Routes', () => {
           done();
         });
     });
+    it('should create a favorite', done => {
+        let payload = { 
+            song_title: 'Still Dre', 
+            artist_name: 'Dr Dre', 
+            genre: 'Rap', 
+            song_rating: '34' 
+        }
+        chai.request(server)
+        .post('/api/v1/favorites')
+        .send(payload)
+        .end((err, response) => {
+            response.should.have.status(201);
+            response.should.be.json;
+            response.body['favorites'].should.be.a('Object');
+            response.body['favorites'].should.have.property('id');
+            response.body['favorites'].id.should.equal(4);
+            response.body['favorites'].should.have.property('song_title');
+            response.body['favorites'].song_title.should.equal('Still Dre');
+            response.body['favorites'].should.have.property('artist_name');
+            response.body['favorites'].artist_name.should.equal('Dr Dre');
+            response.body['favorites'].should.have.property('genre');
+            response.body['favorites'].genre.should.equal('Rap');
+            response.body['favorites'].should.have.property('song_rating');
+            response.body['favorites'].song_rating.should.equal(34);
+            done();
+        });
+    });
+    it('should return a 400 for a favorite that lacks the required fields', done => {
+        let payload = { 
+            artist_name: 'Dr Dre', 
+            genre: 'Rap', 
+            song_rating: '34' 
+        }
+        chai.request(server)
+        .post('/api/v1/favorites')
+        .send(payload)
+        .end((err, response) => {
+            response.should.have.status(400);
+            response.should.be.json;
+            response.body.should.be.a('Object');
+            response.body.should.have.property('error');
+            response.body.error.should.equal("Expected format: { song_title: <String>, artist_name: <String>, genre: <String>, song_rating: <Integer> }. You're missing a \"song_title\" property.");
+          done();
+        });
+    });
 });
 
-//     it('should create a thing', done => {
-//         chai.request(server)
-//         .post('/api/v1/something')
-//         .send({
-//             thing1: 'this',
-//             thing2: 'that'
-//         });
-//         .end((err, response) => {
-//             response.should.have.status(201);
-//             response.should.be.a('object');
-//             response.should.have.property('id');
-//             done();
-//         });
-//     });
-// });
 
