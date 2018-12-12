@@ -91,9 +91,13 @@ const create = (request, response) => {
         .then(
         Playlist.findFavorite(favoriteId)
         .then(returnedInfo => {
+          if (returnedInfo.length > 0) {
             response.status(201).json({
             "message": `Successfully added ${returnedInfo[0]["song_title"]} to ${returnedInfo[0]["name"]} playlist`
-            })
+            });
+          } else {
+            response.status(404).json();
+          }
         })
         .catch(error => {
             response.status(500).json({ error });
