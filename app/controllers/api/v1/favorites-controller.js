@@ -22,7 +22,7 @@ const show = (request, response) => {
         response.status(200).json({ id: favorite[0]["id"], song_title: favorite[0]["song_title"], artist_name: favorite[0]["artist_name"], genre: favorite[0]["genre"], song_rating: favorite[0]["song_rating"] });
       } else {
         response.status(404).json({
-          error: `Could not find song with id ${request.params.id}`
+          error: `Could not find favorite with id ${request.params.id}`
         });
       }
     })
@@ -56,19 +56,24 @@ const create = (request, response) => {
   }
 
   const update = (request, response) => {
-    const song = request.body;
+    const favorite = request.body;
 
   for (let requiredParameter of ['song_title', 'artist_name', 'genre', 'song_rating']) {
-    if (!song[requiredParameter]) {
+    if (!favorite[requiredParameter]) {
       return response
-        .status(422)
+        .status(400)
         .send({ error: `Expected format: { song_title: <String>, artist_name: <String>, genre: <String>, song_rating: <Integer> }. You're missing a "${requiredParameter}" property.` });
     }
   }
 
-  Favorite.update(request.params.id, song, ['id', 'song_title', 'artist_name', 'song_rating'])
-    .then(song => {
-      response.status(200).json({ id: song[0], song_title: song[1], artist_name: song[2], genre: song[3], song_rating: song[4]})
+  Favorite.update(request.params.id, favorite, ['id', 'song_title', 'artist_name', 'genre', 'song_rating'])
+  .then(favorite => {
+      if (favorite.length) {
+        let favorites = { favorites: { id: favorite[0]["id"], song_title: favorite[0]["song_title"], artist_name: favorite[0]["artist_name"], genre: favorite[0]["genre"], song_rating: favorite[0]["song_rating"] }}
+      response.status(200).json(favorites)
+      } else {
+        response.status(400).json();
+      }
     })
     .catch(error => {
       response.status(500).json({ error });
@@ -77,7 +82,7 @@ const create = (request, response) => {
 
   const destroy = (request, response) => {
   Favorite.find(request.params.id).del()
-    .then(song => {
+    .then(favorite => {
       response.status(204).json()
     })
     .catch(error => {
