@@ -21,14 +21,13 @@ exports.up = function(knex, Promise) {
         table.increments('id').primary();
         table.integer('favorite_id').unsigned();
         table.integer('playlist_id').unsigned();
-        table.foreign('favorite_id').references('favorites.id');
+        table.foreign('favorite_id').references('favorites.id').onDelete('CASCADE');
         table.foreign('playlist_id').references('playlists.id');
 
         table.timestamps(true, true);
       })
     ])
   };
-
 
   exports.down = function(knex, Promise) {
     return Promise.all([
