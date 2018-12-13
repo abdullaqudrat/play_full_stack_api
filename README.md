@@ -18,6 +18,40 @@ Play also has a frontend, which displays views to the user & imparts and provide
 JavaScript, Knex, Mocha, Chai, pSQL
 
 
+## Example Endpoints
+### GET /api/v1/favorites
+```
+[
+  {
+    "id": 1,
+    "name": "We Will Rock You",
+    "artist_name": "Queen"
+    "genre": "Rock",
+    "song_rating": 88
+  },
+  {
+    "id": 2,
+    "name": "Careless Whisper",
+    "artist_name": "George Michael"
+    "genre": "Pop",
+    "song_rating": 93
+  },
+]
+
+```
+
+### /api/v1/favorites
+```
+{
+  "songs": {
+    "id": 1,
+    "name": "We Will Rock You",
+    "artist_name": "Queen"
+    "genre": "Rock",
+    "song_rating": 88
+  }
+}
+```
 ### Production
 This app has been deployed to Heroku, and can be viewed in production  [here](https://vast-crag-31836.herokuapp.com/).
 
